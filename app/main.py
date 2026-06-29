@@ -56,7 +56,7 @@ def health():
         "scanner_version": "3.0",
         "scan_phases": 5,
         "scanner_mode": settings.scanner_mode,
-        "wave_program": "Stellar Wave 6",
+        "wave_program": "Stellar Wave 7",
         "checks": [
             "Crawl up to 80 pages, depth 4, DVWA/Juice Shop path seeding",
             "OWASP A01 — IDOR, admin paths, CSRF, open redirect, clickjacking",

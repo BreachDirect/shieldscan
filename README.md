@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/BreachDirect/shieldscan/actions/workflows/ci.yml/badge.svg)](https://github.com/BreachDirect/shieldscan/actions/workflows/ci.yml)
 
-ShieldScan is a practical web-based security assessment tool built for the FUT Minna final year project and the [Stellar Wave 6](https://www.drips.network/wave/stellar) program (Jun 23–30, 2026). It combines automated vulnerability scanning (OWASP ZAP or built-in scanner) with AI-generated plain-English reports and remediation guidance.
+ShieldScan is a practical web-based security assessment tool built for the [Stellar Wave 7](https://www.drips.network/wave/stellar) program. It combines automated vulnerability scanning (OWASP ZAP or built-in scanner) with AI-generated plain-English reports and remediation guidance.
 
 **Organisation:** [BreachDirect](https://github.com/BreachDirect) · **Sibling tool:** [RytScan](https://github.com/BreachDirect/RytScan) (Soroban contract scanner)
 
@@ -145,4 +145,4 @@ Only scan systems you own or have **written permission** to test. DVWA and Juice
 
 ## Author
 
-Michael Victory Osisienimo — FUT Minna, Cyber Security Science
+Michael Victory Osisienimo — [BreachDirect](https://github.com/BreachDirect)

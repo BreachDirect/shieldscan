@@ -11,7 +11,7 @@ PIP_AUDIT := $(VENV)/bin/pip-audit
 UVICORN := $(VENV)/bin/uvicorn
 
 help:
-	@echo "ShieldScan — BreachDirect / Stellar Wave 6"
+	@echo "ShieldScan — BreachDirect / Stellar Wave 7"
 	@echo ""
 	@echo "  make install      Install production dependencies"
 	@echo "  make install-dev  Install dev + test dependencies"

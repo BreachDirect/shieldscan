@@ -15,7 +15,7 @@ def test_health_returns_ok():
     assert data["service"] == "shieldscan"
     assert data["phase"] == 1
     assert data["scanner_version"] == "3.0"
-    assert data["wave_program"] == "Stellar Wave 6"
+    assert data["wave_program"] == "Stellar Wave 7"
     assert len(data["checks"]) >= 5
 
 

@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Last updated:** 2026-06-29  
-**Wave program:** [Stellar Wave 6](https://www.drips.network/wave/stellar) — Jun 23–30, 2026
+**Wave program:** [Stellar Wave 7](https://www.drips.network/wave/stellar)
 
 ---
 
@@ -35,7 +35,7 @@ ShieldScan maps to recurring patterns in the [Stellar Wave issue catalog](https:
 | Backend `make security-ci` pattern | Bandit + dependency audit in Makefile |
 | Soroban contract security (RytScan) | Complementary: RytScan covers on-chain; ShieldScan covers web/API layer |
 
-**Wave 6 goal:** Ship Phase 1 platform foundation so contributors can scan authorised lab targets on day one, with CI-ready health and API contracts.
+**Wave 7 goal:** Ship Phase 1 platform foundation so contributors can scan authorised lab targets on day one, with CI-ready health and API contracts.
 
 ## 4. Solution
 
@@ -52,7 +52,6 @@ ShieldScan provides:
 - SMB owners who need plain-English security reports
 - Wave contributors shipping web backends and dashboards
 - Maintainers triaging `Stellar Wave` security issues on HTTP APIs
-- FYP / academic reviewers evaluating DAST architecture
 
 ## 6. Phased Delivery
 
@@ -79,7 +78,7 @@ ShieldScan provides:
 - [x] API errors return stable `{ error: { code, message, details } }` envelope
 - [x] Contract tests cover validation, not-found, and authorisation errors
 - [x] Unauthorised scan targets rejected without `authorised: true`
-- [x] Documented Wave 6 alignment alongside RytScan
+- [x] Documented Wave 7 alignment alongside RytScan
 
 ### Phase 2: Built-in Scanner Hardening
 
@@ -138,5 +137,5 @@ Only scan systems the operator owns or has **written permission** to test. DVWA 
 
 ---
 
-**Author:** Michael Victory Osisienimo — FUT Minna, Cyber Security Science  
+**Author:** Michael Victory Osisienimo  
 **Organisation:** [BreachDirect](https://github.com/BreachDirect)

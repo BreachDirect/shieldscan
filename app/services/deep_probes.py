@@ -8,7 +8,6 @@ import httpx
 
 from app.schemas import Finding
 from app.services.constants import (
-    CMD_PAYLOADS,
     COMMON_FUZZ_PARAMS,
     DIRECTORY_LIST_PATHS,
     JQUERY_VULN_PATTERNS,
@@ -16,7 +15,6 @@ from app.services.constants import (
     NOSQL_PAYLOADS,
     PATH_TRAVERSAL_PAYLOADS,
     SENSITIVE_PATHS_EXTENDED,
-    SQLI_PAYLOADS,
     SSTI_PAYLOADS,
     XSS_PAYLOADS,
 )

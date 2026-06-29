@@ -1,6 +1,5 @@
 import json
 import logging
-from typing import Any
 
 from app.config import Settings
 from app.schemas import Finding
@@ -49,7 +48,7 @@ def generate_template_report(target_url: str, findings: list[Finding]) -> tuple[
         )
 
     lines = [
-        f"# ShieldScan Security Report\n",
+        "# ShieldScan Security Report\n",
         f"**Target:** {target_url}\n",
         f"**Risk Grade:** {grade}\n",
         f"**Total Findings:** {len(findings)}\n",

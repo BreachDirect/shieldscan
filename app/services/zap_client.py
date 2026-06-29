@@ -63,7 +63,7 @@ class ZAPClient:
         """Optional AJAX spider for JavaScript-heavy apps (Juice Shop, SPAs)."""
         try:
             await self._get("/JSON/ajaxSpider/action/setOptionMaxDuration/", {"Integer": "10"})
-            data = await self._get("/JSON/ajaxSpider/action/scan/", {"url": url, "inScope": "true"})
+            await self._get("/JSON/ajaxSpider/action/scan/", {"url": url, "inScope": "true"})
             if on_progress:
                 on_progress("AJAX spider started for JavaScript pages")
             import asyncio

@@ -2,7 +2,13 @@
 
 **AI-Assisted Web Application Vulnerability Assessment Tool for Small Businesses**
 
-ShieldScan is a practical web-based security assessment tool built for the FUT Minna final year project. It combines automated vulnerability scanning (OWASP ZAP or built-in scanner) with AI-generated plain-English reports and remediation guidance.
+[![CI](https://github.com/BreachDirect/shieldscan/actions/workflows/ci.yml/badge.svg)](https://github.com/BreachDirect/shieldscan/actions/workflows/ci.yml)
+
+ShieldScan is a practical web-based security assessment tool built for the FUT Minna final year project and the [Stellar Wave 6](https://www.drips.network/wave/stellar) program (Jun 23–30, 2026). It combines automated vulnerability scanning (OWASP ZAP or built-in scanner) with AI-generated plain-English reports and remediation guidance.
+
+**Organisation:** [BreachDirect](https://github.com/BreachDirect) · **Sibling tool:** [RytScan](https://github.com/BreachDirect/RytScan) (Soroban contract scanner)
+
+📄 [Product Requirements](docs/prd.md) · 🏗 [Architecture](docs/architecture.md)
 
 ## Features
 
@@ -122,6 +128,16 @@ shieldscan/
 | GET | `/api/scans/{id}/progress` | Live progress |
 | GET | `/api/scans/{id}/report/html` | HTML report |
 | GET | `/api/scans/{id}/report/download` | Markdown download |
+
+## Development
+
+```bash
+make install-dev   # venv + prod + dev deps
+make test          # pytest contract + health tests
+make security-ci   # bandit + pip-audit
+make ci            # lint + test + security-ci
+make run           # start on :8000
+```
 
 ## Ethics
 

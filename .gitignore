@@ -16,6 +16,7 @@ venv/
 
 # SQLite scan history (local dev data)
 *.db
+.test.db
 
 # IDE / OS
 .idea/

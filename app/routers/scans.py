@@ -1,18 +1,19 @@
 import asyncio
 import json
-from datetime import datetime
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import HTMLResponse, Response
 from sqlalchemy.orm import Session
 
 from app.config import Settings, get_settings
 from app.database import get_db
+from app.errors import raise_api_error
 from app.models import Scan, ScanStatus
 from app.schemas import Finding, ScanCreate, ScanDetail, ScanProgress, ScanSummary
 from app.services.finding_utils import enrich_findings
 from app.services.owasp import progress_for_status
 from app.services.scan_orchestrator import ScanOrchestrator
+from app.services.target_guard import validate_scan_request
 
 router = APIRouter(prefix="/api/scans", tags=["scans"])
 
@@ -35,12 +36,7 @@ def create_scan(
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
-    if not payload.authorised:
-        raise HTTPException(400, "You must confirm authorisation to scan this target.")
-
-    url = payload.target_url.strip()
-    if not url.startswith(("http://", "https://")):
-        url = f"http://{url}"
+    url = validate_scan_request(payload.target_url, payload.authorised)
 
     scan = Scan(target_url=url, status=ScanStatus.QUEUED, status_message="Queued for scanning")
     db.add(scan)
@@ -60,7 +56,7 @@ def list_scans(db: Session = Depends(get_db)):
 def get_scan(scan_id: int, db: Session = Depends(get_db)):
     scan = db.query(Scan).filter(Scan.id == scan_id).first()
     if not scan:
-        raise HTTPException(404, "Scan not found")
+        raise_api_error(404, "NOT_FOUND", "Scan not found")
 
     findings = []
     if scan.findings_json:
@@ -89,7 +85,7 @@ def get_scan(scan_id: int, db: Session = Depends(get_db)):
 def scan_progress(scan_id: int, db: Session = Depends(get_db)):
     scan = db.query(Scan).filter(Scan.id == scan_id).first()
     if not scan:
-        raise HTTPException(404, "Scan not found")
+        raise_api_error(404, "NOT_FOUND", "Scan not found")
     return ScanProgress(
         id=scan.id,
         status=scan.status.value,
@@ -103,7 +99,7 @@ def scan_progress(scan_id: int, db: Session = Depends(get_db)):
 def export_html(scan_id: int, db: Session = Depends(get_db)):
     scan = db.query(Scan).filter(Scan.id == scan_id).first()
     if not scan or not scan.ai_report:
-        raise HTTPException(404, "Report not available")
+        raise_api_error(404, "NOT_FOUND", "Report not available")
 
     import markdown
 
@@ -135,7 +131,7 @@ footer{{margin-top:40px;color:#888;font-size:0.9em;border-top:1px solid #ddd;pad
 def download_report(scan_id: int, db: Session = Depends(get_db)):
     scan = db.query(Scan).filter(Scan.id == scan_id).first()
     if not scan or not scan.ai_report:
-        raise HTTPException(404, "Report not available")
+        raise_api_error(404, "NOT_FOUND", "Report not available")
     content = scan.ai_report.encode("utf-8")
     filename = f"shieldscan-report-{scan_id}.md"
     return Response(

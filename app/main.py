@@ -2,11 +2,21 @@ import logging
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.database import init_db
+from app.config import get_settings
+from app.database import SessionLocal, init_db
+from app.errors import (
+    http_exception_handler,
+    unhandled_exception_handler,
+    validation_exception_handler,
+)
 from app.routers import scans
+from app.services.secrets import validate_settings
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -16,6 +26,10 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.add_exception_handler(StarletteHTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, unhandled_exception_handler)
+
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(scans.router)
@@ -24,6 +38,7 @@ app.include_router(scans.router)
 @app.on_event("startup")
 def on_startup():
     init_db()
+    validate_settings(get_settings())
 
 
 @app.get("/")
@@ -33,11 +48,15 @@ def dashboard():
 
 @app.get("/health")
 def health():
+    settings = get_settings()
     return {
         "status": "ok",
         "service": "shieldscan",
+        "phase": 1,
         "scanner_version": "3.0",
         "scan_phases": 5,
+        "scanner_mode": settings.scanner_mode,
+        "wave_program": "Stellar Wave 6",
         "checks": [
             "Crawl up to 80 pages, depth 4, DVWA/Juice Shop path seeding",
             "OWASP A01 — IDOR, admin paths, CSRF, open redirect, clickjacking",
@@ -52,3 +71,20 @@ def health():
             "OWASP ZAP — spider + AJAX spider + passive + active (when Docker on)",
         ],
     }
+
+
+@app.get("/ready")
+def ready():
+    try:
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+        return {"status": "ready", "database": "ok"}
+    except Exception as exc:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "not_ready",
+                "database": "error",
+                "error": {"code": "SERVICE_UNAVAILABLE", "message": str(exc)},
+            },
+        )

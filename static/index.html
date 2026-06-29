@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShieldScan — Web Vulnerability Assessment</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🛡️</div>
+      <div>
+        <h1>ShieldScan</h1>
+        <span>Website security checks, explained simply</span>
+      </div>
+    </div>
+    <div class="header-status" id="header-status">
+      <span class="status-dot"></span>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Check your website for security problems</h2>
+      <p>Enter your site address, run a scan, and get a clear report with what to fix first.</p>
+    </section>
+
+    <section class="scan-card" id="scan-form-section">
+      <div class="card-header-row">
+        <h3>Start a scan</h3>
+      </div>
+
+      <details class="lab-presets-details">
+        <summary>Practice website (for demos &amp; testing)</summary>
+        <div class="lab-presets">
+          <button type="button" class="preset-btn" data-url="http://127.0.0.1:4280">DVWA</button>
+          <button type="button" class="preset-btn" data-url="http://127.0.0.1:3000">Juice Shop</button>
+          <button type="button" class="preset-btn" data-url="http://127.0.0.1:8000">This tool</button>
+        </div>
+      </details>
+
+      <form id="scan-form">
+        <div class="form-group">
+          <label for="target-url">Website address (URL)</label>
+          <input type="url" id="target-url" placeholder="https://your-business-website.com" required>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="authorised" required>
+          <label for="authorised">I own this website or have written permission to test it. I understand scanning without permission may be illegal.</label>
+        </div>
+        <button type="submit" class="btn btn-primary" id="start-scan">
+          <span class="btn-label">Run security scan</span>
+        </button>
+      </form>
+
+      <div class="progress-section" id="progress-section">
+        <div class="pipeline" id="pipeline">
+          <div class="pipeline-step" data-step="queued"><span class="step-dot"></span><span>Queued</span></div>
+          <div class="pipeline-step" data-step="running"><span class="step-dot"></span><span>Init</span></div>
+          <div class="pipeline-step" data-step="spidering"><span class="step-dot"></span><span>Crawl</span></div>
+          <div class="pipeline-step" data-step="passive_scan"><span class="step-dot"></span><span>Analyse</span></div>
+          <div class="pipeline-step" data-step="active_scan"><span class="step-dot"></span><span>Probe</span></div>
+          <div class="pipeline-step" data-step="ai_reporting"><span class="step-dot"></span><span>Report</span></div>
+          <div class="pipeline-step" data-step="complete"><span class="step-dot"></span><span>Done</span></div>
+        </div>
+        <p class="progress-status" id="progress-status">Initializing...</p>
+        <div class="progress-bar-bg">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section" id="results-section">
+      <div class="scan-card results-card">
+        <div class="results-header">
+          <div>
+            <h3>Scan Results</h3>
+            <p class="scan-meta" id="scan-meta"></p>
+          </div>
+          <div class="grade-wrap">
+            <div class="grade-badge grade-C" id="grade-badge">—</div>
+            <span class="grade-label">Overall safety score</span>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">Issues found</div></div>
+          <div class="stat-card stat-critical"><div class="num" id="stat-critical">0</div><div class="lbl">Critical</div></div>
+          <div class="stat-card stat-high"><div class="num" id="stat-high">0</div><div class="lbl">High</div></div>
+          <div class="stat-card stat-medium"><div class="num" id="stat-medium">0</div><div class="lbl">Medium</div></div>
+          <div class="stat-card stat-low"><div class="num" id="stat-low">0</div><div class="lbl">Low</div></div>
+        </div>
+
+        <div class="owasp-section">
+          <h4 class="section-subtitle">What types of problems were found</h4>
+          <div class="owasp-breakdown" id="owasp-breakdown"></div>
+        </div>
+
+        <div class="executive-box">
+          <h4>Summary</h4>
+          <p id="executive-summary"></p>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" id="export-html">Export HTML Report</button>
+          <button class="btn btn-secondary" id="export-md">Download Markdown</button>
+          <button class="btn btn-secondary" id="new-scan">New Scan</button>
+        </div>
+
+        <div class="findings-header">
+          <h3>Issues found</h3>
+          <div class="filter-chips" id="filter-chips">
+            <button type="button" class="filter-chip active" data-filter="all">All</button>
+            <button type="button" class="filter-chip" data-filter="Critical">Critical</button>
+            <button type="button" class="filter-chip" data-filter="High">High</button>
+            <button type="button" class="filter-chip" data-filter="Medium">Medium</button>
+            <button type="button" class="filter-chip" data-filter="Low">Low</button>
+            <button type="button" class="filter-chip" data-filter="Informational">Info</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="findings-table">
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th>Problem</th>
+                <th>Page</th>
+                <th>Where on the page</th>
+                <th>What we saw</th>
+                <th>How to fix</th>
+              </tr>
+            </thead>
+            <tbody id="findings-body"></tbody>
+          </table>
+        </div>
+
+        <h3>Full report &amp; fix guide</h3>
+        <div class="report-box" id="ai-report"></div>
+      </div>
+    </section>
+
+    <section class="history-section">
+      <h3>Scan History</h3>
+      <div class="history-list" id="history-list"></div>
+    </section>
+  </main>
+
+  <footer>
+    ShieldScan — Final Year Project &middot; FUT Minna Cyber Security Science &middot; For authorised testing only
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

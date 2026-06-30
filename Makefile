@@ -42,7 +42,7 @@ lint:
 	$(RUFF) check app tests
 
 security-ci:
-	$(BANDIT) -r app -ll -q
+	$(BANDIT) -r app -c bandit.yaml -ll -q
 	$(PIP_AUDIT) -r requirements.txt
 
 ci: lint test security-ci

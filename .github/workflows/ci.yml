@@ -39,5 +39,5 @@ jobs:
 
       - name: Security CI
         run: |
-          bandit -r app -ll -q
+          bandit -r app -c bandit.yaml -ll -q
           pip-audit -r requirements.txt

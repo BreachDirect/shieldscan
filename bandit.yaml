@@ -1,0 +1,11 @@
+# Bandit config — ShieldScan is a deliberate security scanner; several
+# findings are expected false positives for lab/DAST tooling.
+skips:
+  - B108  # URL path probes (/tmp/) — not local filesystem usage
+  - B104  # 0.0.0.0 bind for Docker/container dashboard (override via .env)
+  - B501  # verify=False for authorised lab targets with self-signed TLS
+
+exclude_dirs:
+  - /tests
+  - /venv
+  - /.venv

@@ -32,7 +32,7 @@ jobs:
 
       - name: Test
         env:
-          SHIELDSCAN_DATABASE_URL: sqlite:///:memory:
+          SHIELDSCAN_DATABASE_URL: "sqlite:///:memory:"
           SCANNER_MODE: builtin
           ZAP_API_KEY: changeme
         run: pytest tests/ -v
